@@ -20,7 +20,7 @@
     "google-auth-library": "^10.5.0",
     "dotenv": "^17.0.0",
     "gaxios": "^7.0.0",
-    "node-fetch": "^2.3.0",
+    "node-fetch": "^3.3.2",
     "open": "^9.0.0",
     "server-destroy": "^1.0.1",
     "@aws-sdk/client-sts": "^3.58.0"
