@@ -83,7 +83,7 @@ const http = require('http');
  * background and does not invoke a shell.
  * @param {string} cmd The command to run (for example, process.execPath).
  * @param {string[]} [args] The list of string arguments.
- * @param {*} opts The optional parameters for child_process.execFile.
+ * @param {import('child_process').ExecFileOptions} opts The optional parameters for child_process.execFile.
  * @return {Promise<string>} A promise that resolves with a string
  *   corresponding with the terminal output.
  */
