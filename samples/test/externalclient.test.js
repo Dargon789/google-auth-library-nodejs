@@ -78,18 +78,16 @@ const path = require('path');
 const http = require('http');
 
 /**
- * Runs the provided command using asynchronous child_process.execFile.
+ * Runs the provided command using asynchronous child_process.exec.
  * Unlike execSync, this works with another local HTTP server running in the
- * background and does not invoke a shell.
- * @param {string} cmd The command to run (for example, process.execPath).
- * @param {string[]} [args] The list of string arguments.
- * @param {import('child_process').ExecFileOptions} opts The optional parameters for child_process.execFile.
+ * background.
+ * @param {string} cmd The actual command string to run.
+ * @param {*} opts The optional parameters for child_process.exec.
  * @return {Promise<string>} A promise that resolves with a string
  *   corresponding with the terminal output.
  */
-const execFileAsync = promisify(cp.execFile);
-const execAsync = async (cmd, args, opts) => {
-  const {stdout, stderr} = await execFileAsync(cmd, args, opts);
+const execAsync = async (cmd, opts) => {
+  const {stdout, stderr} = await exec(cmd, opts);
   return stdout + stderr;
 };
 
@@ -286,7 +284,7 @@ describe('samples for external-account', () => {
 
     // Run sample script with GOOGLE_APPLICATION_CREDENTIALS envvar
     // pointing to the temporarily created configuration file.
-    const output = await execAsync(process.execPath, ['adc'], {
+    const output = await execAsync(`${process.execPath} adc`, {
       env: {
         ...process.env,
         GOOGLE_APPLICATION_CREDENTIALS: configFilePath,
@@ -319,7 +317,7 @@ describe('samples for external-account', () => {
     // pointing to the temporarily created configuration file.
     // This script will use signBlob to sign some data using
     // service account impersonated workload identity pool credentials.
-    const output = await execAsync(process.execPath, ['signBlob'], {
+    const output = await execAsync(`${process.execPath} signBlob`, {
       env: {
         ...process.env,
         GOOGLE_APPLICATION_CREDENTIALS: configFilePath,
@@ -385,7 +383,7 @@ describe('samples for external-account', () => {
 
     // Run sample script with GOOGLE_APPLICATION_CREDENTIALS environment
     // variable pointing to the temporarily created configuration file.
-    const output = await execAsync(process.execPath, ['adc'], {
+    const output = await execAsync(`${process.execPath} adc`, {
       env: {
         ...process.env,
         GOOGLE_APPLICATION_CREDENTIALS: configFilePath,
@@ -416,7 +414,7 @@ describe('samples for external-account', () => {
     // Run sample script with GOOGLE_APPLICATION_CREDENTIALS environment
     // variable pointing to the temporarily created configuration file.
     // Populate AWS environment variables to simulate an AWS VM.
-    const output = await execAsync(process.execPath, ['adc'], {
+    const output = await execAsync(`${process.execPath} adc`, {
       env: {
         ...process.env,
         // AWS environment variables: hardcoded region + AWS security
@@ -467,7 +465,7 @@ describe('samples for external-account', () => {
     await writeFile(executableFilePath, exeContent, {mode: 0x766});
     // Run sample script with GOOGLE_APPLICATION_CREDENTIALS environment
     // variable pointing to the temporarily created configuration file.
-    const output = await execAsync(process.execPath, ['adc'], {
+    const output = await execAsync(`${process.execPath} adc`, {
       env: {
         ...process.env,
         // Set environment variable to allow pluggable auth executable to run.
